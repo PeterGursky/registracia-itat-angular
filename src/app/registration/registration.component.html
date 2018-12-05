@@ -1,0 +1,62 @@
+{{model}}
+<form #participantForm="ngForm">
+  <div class="form-group">
+    <label for="inputname">Name <sup>*</sup></label>
+    <input type="text" class="form-control" id="inputname" 
+    placeholder="Write your name" [(ngModel)]="participant.name" 
+    name="inputname" required 
+    #nameModel="ngModel" 
+    [ngClass]="{'is-valid': nameModel.valid, 
+    'is-invalid' : !nameModel.valid && nameModel.dirty}">
+    <div class="invalid-feedback">
+      Please provide your name
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputsurname">Surname <sup>*</sup></label>
+    <input type="text" class="form-control" id="inputsurname" 
+    placeholder="Write your surname" [(ngModel)]="participant.surname" 
+    name="inputsurname" required 
+    #surnameModel="ngModel" 
+    [class.is-valid]="surnameModel.valid"
+    [class.is-invalid]="!surnameModel.valid && surnameModel.dirty">
+    <div class="invalid-feedback">
+      Please provide your surname
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="inputorg">Organization <sup>*</sup></label>
+    <input type="text" class="form-control" id="inputorg" 
+    placeholder="Write your organization" [(ngModel)]="participant.organization" 
+    name="inputorg" required>
+  </div>
+  <div class="form-group">
+    <label for="inputico">IČO</label>
+    <input type="number" class="form-control" id="inputico" 
+    placeholder="IČO : indetifier of organization" [(ngModel)]="participant.ico" 
+    name="inputico" pattern="[0-9]*"
+    #icoModel="ngModel" 
+    [ngClass]="{'is-valid': icoModel.valid, 
+    'is-invalid' : !icoModel.valid && icoModel.dirty}">
+    <div class="invalid-feedback">
+      Please provide your name
+    </div>
+  </div>
+  <fieldset class="form-group">
+    <div class="row">
+      <legend class="col-form-label col-sm-2 pt-0">Workshop</legend>
+       <div class="col-sm-10">
+        <div *ngFor="let ws of workshops" class="form-check">
+          <input class="form-check-input" type="radio" name="inputws" 
+          id="inputws_{{ws.name}}" [value]="ws" [(ngModel)]="participant.workshop">
+          <label class="form-check-label" for="inputws_{{ws.name}}">
+            {{ws.name}} - from {{ws.start | date:'EEEE d.M.yyyy'}} 
+            to {{ws.end | date:'EEEE d.M.yyyy'}}
+          </label>
+        </div>  
+      </div>
+    </div>
+  </fieldset>
+  <button type="submit" class="btn btn-primary" 
+  [disabled]="!participantForm.form.valid">Submit</button>
+</form>
