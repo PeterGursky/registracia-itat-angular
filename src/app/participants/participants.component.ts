@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Participant } from '../participant';
+import { RestClientService } from '../rest-client.service';
 
 @Component({
   selector: 'app-participants',
@@ -7,15 +8,14 @@ import { Participant } from '../participant';
   styleUrls: ['./participants.component.css']
 })
 export class ParticipantsComponent implements OnInit {
-  private participants: Participant[] = [
-    new Participant("Peter","Gurský","UPJŠ",8),
-    new Participant("Alexander","Szabari","UPJŠ",1)
-  ];
+  private participants: Participant[] = [];
   private selected:Participant;
 
-  constructor() { }
+  constructor(private restService: RestClientService) { }
 
   ngOnInit() {
+    this.restService.getParicipants()
+    .subscribe(p => this.participants = p);
   }
 
   selectParticipant(participant: Participant) : void {
