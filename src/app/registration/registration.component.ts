@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Participant } from '../participant';
 import { Workshop } from '../workshop';
+import { RestClientService } from '../rest-client.service';
 
 @Component({
   selector: 'app-registration',
@@ -8,22 +9,34 @@ import { Workshop } from '../workshop';
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
-  private workshops:Workshop[] = [
-    new Workshop(1, "prvy", new Date('2019-09-17'), new Date('2019-09-19'),250,200,280,230),
-    new Workshop(2, "druhy", new Date('2019-09-18'), new Date('2019-09-20'),250,200,280,230)
-  ];
+  private workshops:Workshop[] = [];
+  private saved:boolean = false;
 
   private participant: Participant=new Participant();
 
-  constructor() { 
+  constructor(private restService:RestClientService) { 
   }
 
   ngOnInit() {
-    this.participant.workshop = this.workshops[0];
+    this.getWorkshops();
   }
 
   get model():string {
     return JSON.stringify(this.participant);
   }
 
+  getWorkshops() {
+    this.restService.getWorkshops().subscribe(w => {
+      this.workshops = w;
+      this.participant.workshop = this.workshops[0];
+    });
+  }
+
+  formSubmit() {
+    this.restService.sendNewParticipant(this.participant)
+     .subscribe(participant => {
+        this.saved = true;
+        setTimeout(_=> this.saved = false, 5000);
+     });
+  }
 }
